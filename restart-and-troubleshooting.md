@@ -1,228 +1,154 @@
-# Restarting and Troubleshooting FOSSology
+## Restarting FOSSology (Clear Explanation)
 
-This document explains how to restart FOSSology safely
-and how to troubleshoot common problems faced by beginners.
+Many beginners confuse restarting FOSSology with restarting the system.
+These are NOT the same.
 
----
-
-## Important Concept
-
-Closing the browser does NOT stop FOSSology.
-
-FOSSology runs inside Docker containers in the background.
-The browser is only used to access the web interface.
+This section explains all restart cases clearly.
 
 ---
 
-## Reopening FOSSology
+## Case 1: You closed the browser
 
-### Case 1: Browser was closed
+This does NOT stop FOSSology.
 
-Nothing is stopped.
+FOSSology continues running in Docker.
 
-Open the browser again and go to:
+To open it again:
+- Open a browser
+- Go to:
 
 http://localhost:8081/repo
 
-No Docker command is required.
+No terminal command is needed.
 
 ---
 
-### Case 2: System was restarted or shut down
+## Case 2: You closed the terminal
 
-Docker containers may not start automatically.
+Closing the terminal does NOT stop Docker containers.
 
-Go to the FOSSology directory and run:
+FOSSology continues running in the background.
 
-```bash
-cd fossology
-docker-compose up -d```
-# Then open the browser and go to:
-
-  http://localhost:8081/repo
-
-### Case 3: Containers were stopped manually
- Start them again using:
+To continue working:
+- Open a new terminal
+- Go to the project directory
 
 ```bash
-Copy code
-docker-compose up -d```
+cd fossology-beginner-user-manual
+Case 3: You restarted or shut down the computer
+When the system restarts, Docker containers usually stop.
 
-# Stopping FOSSology Safely
-To stop all FOSSology services:
+You must start FOSSology again manually.
+
+Steps:
 
 bash
 Copy code
-```docker-compose down```
+cd fossology-beginner-user-manual
+docker-compose up -d
+Then open:
 
-# This command:
+http://localhost:8081/repo
 
-* Stops containers
+Case 4: You want to restart only FOSSology (recommended fix)
+If scans fail or UI behaves incorrectly, restart FOSSology only.
 
-* Keeps uploads and database safe
-
-* Does NOT delete data
-
-# Restarting FOSSology Cleanly
-If FOSSology behaves incorrectly, restart all services:
+This is SAFE and does not delete data.
 
 bash
 Copy code
-```
 docker-compose down
 docker-compose up -d
+This restarts:
 
-```
-# This restarts:
+Web interface
 
-* Web interface
+Scheduler
 
-* Scheduler
+Agents
 
-* Agents
+Database connections
 
-* Database connections
-
-# Full Reset (Use With Caution)
-This command removes all data:
+Case 5: You want to stop FOSSology safely
+To stop all services:
 
 bash
 Copy code
-```
+docker-compose down
+This:
+
+Stops containers
+
+Keeps uploads and database safe
+
+Does NOT delete data
+
+Case 6: Full reset (DANGEROUS, use carefully)
+This removes ALL data.
+
+bash
+Copy code
 docker-compose down -v
-```
-# Warning:
+This deletes:
 
-* Deletes database
+Uploaded files
 
-* Deletes uploads
+Database
 
-* Deletes scan results
+Scan results
 
-Use only if a fresh installation is required.
+Use only if you want a fresh setup.
 
-## Understanding Errors
-The web interface may show messages like:
+Important Note About Turbo Boost and Performance
+Turbo Boost or CPU performance settings do NOT affect FOSSology behavior.
 
-# Job failed
+If the system feels slow, the reason is usually:
 
-This message does not show the real reason.
+Docker using high CPU or RAM
 
-The actual reason is available in logs.
+Low system memory
 
-#Viewing Logs
-To view logs:
+Multiple containers running
 
-bash
-Copy code
-```
-docker-compose logs -f
-```
+This is NOT hacking and NOT a security issue.
 
-# Logs help identify:
-
-* Agent failures
-
-* Scheduler errors
-
-*  Configuration problems
-
-* Permission issues
-
-Press CTRL + C to stop viewing logs.
-
-# common Problems and Fixes
-Problem: Scan job failed
-Steps:
-
-1. Open the Jobs tab
-
-2. Read the error message
-
-3. Check logs using docker-compose logs -f
-
-# Problem: Uploaded file but no scan results
-Possible causes:
-
-* Agents were not selected
-
-* Scan job is still running
-
-* Scan job failed
-
-Always check the Jobs tab.
-
-# Problem: Web interface does not open
-Steps:
-
-1. Check running containers:
+To reduce load, stop containers when not needed:
 
 bash
 Copy code
-```
-docker ps
-```
-2. If containers are not running:
-
-bash
-Copy code
-```
-docker-compose up -d
-```
-# Problem: Login does not work
- Possible causes:
-
-* Containers not fully started
-
-* Database not ready
-
-* Configuration issues
-
-Fix:
-
-bash
-Copy code
-
-```
 docker-compose down
-docker-compose up -d
-```
-# Best Practices
-* Always stop services using docker-compose down
-
-* Restart services if scans behave unexpectedly
-
-* Check logs before assuming a bug
-
-* Do not delete volumes unless required
-
-# Next Step
-After troubleshooting, continue with:
-
-architecture-and-codebase.md
+Restart only when required.
 
 yaml
 Copy code
 
 ---
 
-## IMPORTANT CONFIRMATION
+## SAVE AND EXIT
 
-- Everything is inside the copy box  
-- No clickable Markdown links  
-- No content outside the box  
-- 100 percent nano-safe  
+In nano:
+
+- Press `CTRL + O` → Enter  
+- Press `CTRL + X`
 
 ---
 
-### What you should reply next (one word)
+## COMMIT THE CHANGE
 
-- `REVIEW`  
-- `ISSUE`  
+```bash
+git add restart-and-troubleshooting.md
+git commit -m "Clarify restart, reboot, and performance behavior"
+git push
+FINAL CHECK (IMPORTANT)
+This edit:
 
-You’re done writing. Now we move to **submission and maintainers**.
+Removes confusion
 
+Prevents panic
 
+Explains restart properly
 
+Is beginner-friendly
 
+Is technically correct
 
