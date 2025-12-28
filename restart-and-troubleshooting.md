@@ -1,17 +1,36 @@
-## Restarting FOSSology (Clear Explanation)
+# Restarting and Troubleshooting FOSSology
 
-Many beginners confuse restarting FOSSology with restarting the system.
-These are NOT the same.
+This document explains how to safely restart FOSSology
+and how to troubleshoot common problems faced by beginners.
 
-This section explains all restart cases clearly.
+This guide assumes FOSSology is running using Docker.
+
+---
+
+## Important Concept
+
+Closing the browser does NOT stop FOSSology.
+
+FOSSology runs inside Docker containers in the background.
+The browser is only used to access the web interface.
+
+---
+
+## Restart and Reopen Scenarios
+
+Many beginners confuse browser close, terminal close,
+system restart, and Docker restart.
+These are different actions.
+
+This section explains each case clearly.
 
 ---
 
 ## Case 1: You closed the browser
 
-This does NOT stop FOSSology.
+Nothing is stopped.
 
-FOSSology continues running in Docker.
+FOSSology is still running in Docker.
 
 To open it again:
 - Open a browser
@@ -19,7 +38,7 @@ To open it again:
 
 http://localhost:8081/repo
 
-No terminal command is needed.
+No terminal command is required.
 
 ---
 
@@ -31,7 +50,7 @@ FOSSology continues running in the background.
 
 To continue working:
 - Open a new terminal
-- Go to the project directory
+- Go to your project directory
 
 ```bash
 cd fossology-beginner-user-manual
@@ -51,9 +70,10 @@ Then open:
 http://localhost:8081/repo
 
 Case 4: You want to restart only FOSSology (recommended fix)
-If scans fail or UI behaves incorrectly, restart FOSSology only.
+If scans fail or the UI behaves incorrectly,
+restart FOSSology services only.
 
-This is SAFE and does not delete data.
+This is safe and does NOT delete data.
 
 bash
 Copy code
@@ -70,12 +90,12 @@ Agents
 Database connections
 
 Case 5: You want to stop FOSSology safely
-To stop all services:
+To stop all FOSSology services:
 
 bash
 Copy code
 docker-compose down
-This:
+This command:
 
 Stops containers
 
@@ -83,7 +103,7 @@ Keeps uploads and database safe
 
 Does NOT delete data
 
-Case 6: Full reset (DANGEROUS, use carefully)
+Case 6: Full reset (use with caution)
 This removes ALL data.
 
 bash
@@ -97,58 +117,108 @@ Database
 
 Scan results
 
-Use only if you want a fresh setup.
+Use this only if you want a fresh installation.
 
-Important Note About Turbo Boost and Performance
-Turbo Boost or CPU performance settings do NOT affect FOSSology behavior.
+Understanding Errors
+The web interface may show messages such as:
 
-If the system feels slow, the reason is usually:
+Job failed
 
-Docker using high CPU or RAM
+This message does NOT explain the real reason.
 
-Low system memory
+The actual reason is available in logs.
 
-Multiple containers running
+Viewing Logs
+To view Docker logs:
+
+bash
+Copy code
+docker-compose logs -f
+Logs help identify:
+
+Agent failures
+
+Scheduler errors
+
+Configuration problems
+
+Permission issues
+
+Press CTRL + C to stop viewing logs.
+
+Common Problems and Fixes
+Problem: Scan job failed
+Steps:
+
+Open the Jobs tab in the UI
+
+Read the error message
+
+Check logs using docker-compose logs -f
+
+Problem: Uploaded file but no scan results
+Possible causes:
+
+Analysis agents were not selected
+
+Scan job is still running
+
+Scan job failed
+
+Always verify job status in the Jobs tab.
+
+Problem: Web interface does not open
+Steps:
+
+Check running containers:
+
+bash
+Copy code
+docker ps
+If containers are not running:
+
+bash
+Copy code
+docker-compose up -d
+Problem: Login does not work
+Possible causes:
+
+Containers not fully started
+
+Database not ready
+
+Configuration issues
+
+Fix:
+
+bash
+Copy code
+docker-compose down
+docker-compose up -d
+Performance and System Load Note
+High CPU or memory usage is usually caused by:
+
+Multiple Docker containers running
+
+Large scans
+
+Low system RAM
 
 This is NOT hacking and NOT a security issue.
 
-To reduce load, stop containers when not needed:
+To reduce load, stop services when not needed:
 
 bash
 Copy code
 docker-compose down
 Restart only when required.
 
-yaml
-Copy code
+Best Practices
+Always stop services using docker-compose down
 
----
+Restart services if scans behave unexpectedly
 
-## SAVE AND EXIT
+Check logs before assuming a bug
 
-In nano:
-
-- Press `CTRL + O` → Enter  
-- Press `CTRL + X`
-
----
-
-## COMMIT THE CHANGE
-
-```bash
-git add restart-and-troubleshooting.md
-git commit -m "Clarify restart, reboot, and performance behavior"
-git push
-FINAL CHECK (IMPORTANT)
-This edit:
-
-Removes confusion
-
-Prevents panic
-
-Explains restart properly
-
-Is beginner-friendly
-
-Is technically correct
+Do not delete volumes unless required
 
